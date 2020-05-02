@@ -3,6 +3,7 @@ import * as uuid from "uuid"
 import ContainedInput from "./assets/ContainedInput"
 
 const TOKEN = process.env.TELEGRAM_TOKEN;
+console.log(TOKEN);
 
 const bot = new Telegraf(TOKEN, { username: "KotKitBot" });
 bot.on("inline_query", async ({ inlineQuery, answerInlineQuery }) => {

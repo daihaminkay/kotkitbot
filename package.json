@@ -4,7 +4,7 @@
   "description": "Funny translator",
   "main": "src/index.ts",
   "scripts": {
-    "start": "npm run build && pm2 start dist/index.js",
+    "start": "npm run build && pm2 start dist/index.js --no-daemon",
     "build": "tsc **/*.ts --outDir dist",
     "server": "pm2 start src/index.ts --watch",
     "test": "echo \"Error: no test specified\" && exit 1"
