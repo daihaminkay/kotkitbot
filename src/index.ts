@@ -2,7 +2,7 @@ import { Telegraf } from "telegraf"
 import * as uuid from "uuid"
 import ContainedInput from "./assets/ContainedInput"
 
-const TOKEN = "";
+const TOKEN = "981200892:AAHAwItQBMqtHofFPkMIXwbyDr4iqAoEvug";
 
 const bot = new Telegraf(TOKEN, { username: "KotKitBot" });
 bot.on("inline_query", async ({ inlineQuery, answerInlineQuery }) => {
