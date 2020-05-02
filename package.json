@@ -4,8 +4,9 @@
   "description": "Funny translator",
   "main": "src/index.ts",
   "scripts": {
-    "start": "ts-node src/index.ts",
-    "server": "nodemon",
+    "start": "npm run build && pm2 start dist/index.js",
+    "build": "tsc **/*.ts --outDir dist",
+    "server": "pm2 start src/index.ts --watch",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "author": "",
@@ -13,6 +14,7 @@
   "dependencies": {
     "@types/node": "^13.13.4",
     "nodemon": "^2.0.3",
+    "pm2": "^4.4.0",
     "telegraf": "^3.38.0",
     "ts-node": "^8.9.1",
     "typescript": "^3.8.3",
