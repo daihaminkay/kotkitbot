@@ -4,7 +4,7 @@
   "description": "Funny translator",
   "main": "src/index.ts",
   "scripts": {
-    "start": "npm run build && node dist/index.js",
+    "start": "node dist/index.js",
     "build": "tsc **/*.ts --outDir dist",
     "server": "nodemon",
     "clean": "rm -rf ./node_modules ./dist",
