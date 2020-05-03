@@ -148,6 +148,18 @@ export default class CommunityContainedInput {
         return this;
     }
 
+    /**
+     * Предлог "на" под запретом - автозамена на "в"
+     */
+    applySingleVowelWordTransformation(): CommunityContainedInput {
+        this._input = this._input.map(word => {
+            let r = new RegExp("([" + BASIC_RUSSIAN_VOWELS.join("") + "]{1})(?!.*[" + RUSSIAN_VOWELS.join('') + "])(?=.)", "gi")
+            return word.replace(r, "i")
+        })
+
+        return this;
+    }
+
     toString(): string {
         return this._input.join(" ");
     }

@@ -37,5 +37,6 @@ function processMessage(message: string): string {
         .applyTisyaRule()
         .applyInfinitiveRule()
         .applyApostropheRule()
+        .applySingleVowelWordTransformation()
         .toString();
 }
