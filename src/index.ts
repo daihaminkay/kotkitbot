@@ -7,8 +7,8 @@ console.log(TOKEN);
 
 const bot = new Telegraf(TOKEN, { username: "KotKitBot" });
 bot.on("inline_query", async ({ inlineQuery, answerInlineQuery }) => {
-    console.log(`Caller: ${inlineQuery.from.username} (${inlineQuery.from.is_bot ? "human" : "bot"}), Input: ${inlineQuery.query}`);
     if (inlineQuery.query) {
+        console.log(`Caller: ${inlineQuery.from.username} (${inlineQuery.from.is_bot ? "bot" : "human"}), Input: ${inlineQuery.query}`);
         let messageResponse = [processMessage(inlineQuery.query)];
         let response = messageResponse.map(r => ({
             type: "article",
