@@ -1,13 +1,13 @@
 {
-  "name": "ukrassian-bot",
-  "version": "0.0.1",
+  "name": "kot-kit-bot",
+  "version": "1.0.0",
   "description": "Funny translator",
   "main": "src/index.ts",
   "scripts": {
     "start": "npm run build && node dist/index.js",
     "build": "tsc **/*.ts --outDir dist",
     "server": "nodemon",
-    "clean": "rm -rf ./node_modules",
+    "clean": "rm -rf ./node_modules ./dist",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "author": "",

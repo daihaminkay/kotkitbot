@@ -1,9 +1,8 @@
 import { Telegraf } from "telegraf"
 import * as uuid from "uuid"
-import ContainedInput from "./assets/ContainedInput"
+import CommunityContainedInput from "./assets/CommunityContainedInput"
 
 const TOKEN = process.env.TELEGRAM_TOKEN;
-console.log(TOKEN);
 
 const bot = new Telegraf(TOKEN, { username: "KotKitBot" });
 bot.on("inline_query", async ({ inlineQuery, answerInlineQuery }) => {
@@ -24,12 +23,19 @@ bot.on("inline_query", async ({ inlineQuery, answerInlineQuery }) => {
 bot.launch()
 
 function processMessage(message: string): string {
-    const processedMessage = new ContainedInput(message);
+    const processedMessage = new CommunityContainedInput(message);
     return processedMessage
+        .applyZTransformation()
+        .applyVowelsTransformation()
+        .applyETransformation()
+        .applyITransformation()
+        .applyDoubleITransformation()
+        .applyDoubleLetterTransformation()
+        .applyVNaTransformation()
+        .applyDoubleConsonantTransformation()
         .applyAbsentLetterRule()
-        .applyKitRule()
-        .applyInfinitiveRule()
         .applyTisyaRule()
-        .applyVulitsaRule()
+        .applyInfinitiveRule()
+        .applyApostropheRule()
         .toString();
 }
