@@ -7,16 +7,19 @@
     "start": "npm run build && node dist/index.js",
     "build": "tsc **/*.ts --outDir dist",
     "server": "nodemon",
+    "clean": "rm -rf ./node_modules",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "author": "",
   "license": "ISC",
   "dependencies": {
     "@types/node": "^13.13.4",
-    "nodemon": "^2.0.3",
     "telegraf": "^3.38.0",
-    "ts-node": "^8.9.1",
     "typescript": "^3.8.3",
     "uuid": "^8.0.0"
+  },
+  "devDependencies": {
+    "nodemon": "^2.0.3",
+    "ts-node": "^8.9.1"
   }
 }
