@@ -2,8 +2,8 @@
  * Inspired by: https://a2ch.ru/2014/02/25/aniny-skiro-na-ukrin-bidit-ubivit-ili-sizhit-v-tirmu-za-63194316.html
  */
 
-const BASIC_RUSSIAN_VOWELS = ["а", "ю", "я", "ё", "о", "у"];
-const RUSSIAN_VOWELS = ["а", "э", "ю", "я", "ы", "ё", "о", "у", "е", "и"];
+export const BASIC_RUSSIAN_VOWELS = ["а", "ю", "я", "ё", "о", "у"];
+export const RUSSIAN_VOWELS = ["а", "э", "ю", "я", "ы", "ё", "о", "у", "е", "и"];
 export default class CommunityContainedInput {
     private _input: string[];
 
@@ -47,7 +47,7 @@ export default class CommunityContainedInput {
      */
     applyETransformation(): CommunityContainedInput {
         this._input = this._input.map(word => {
-            return word.replace(/е/g, "є").replace(/E/g, "Є").replace(/э/gi, (match) => {
+            return word.replace(/е/g, "є").replace(/Е/g, "Є").replace(/э/gi, (match) => {
                 return this.matchCase("е", match)
             })
         });
