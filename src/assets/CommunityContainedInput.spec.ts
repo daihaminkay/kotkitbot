@@ -21,4 +21,24 @@ describe('CommunityContainedInput', () => {
             assert.strictEqual(output.toString(), "обсос")
         })
     })
+
+    describe('applyETransformation', () => {
+        it("should transform 'e' to 'є'", () => {
+            let output = new CommunityContainedInput("перевод");
+            output.applyETransformation();
+            assert.strictEqual(output.toString(), "пєрєвод")
+        })
+
+        it("should transform 'e' to 'є' in the beginning of the word", () => {
+            let output = new CommunityContainedInput("еретик");
+            output.applyETransformation();
+            assert.strictEqual(output.toString(), "єрєтик")
+        })
+
+        it("should transform 'e' to 'є' in the end of the word", () => {
+            let output = new CommunityContainedInput("стране");
+            output.applyETransformation();
+            assert.strictEqual(output.toString(), "странє")
+        })
+    })
 });

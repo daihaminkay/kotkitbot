@@ -11,13 +11,32 @@ export default class CommunityContainedInput {
         this._input = input.split(/\s/);
     }
 
+    private matchCase(text: string, pattern: string): string {
+        var result = '';
+
+        for (var i = 0; i < text.length; i++) {
+            var c = text.charAt(i);
+            var p = pattern.charCodeAt(i);
+
+            if (p >= 1040 && p < 1040 + 32) {
+                result += c.toUpperCase();
+            } else {
+                result += c.toLowerCase();
+            }
+        }
+
+        return result;
+    }
+
     /**
      * Переводит все гласные (для которых нет других правил) кроме последней в i
      */
     applyVowelsTransformation(): CommunityContainedInput {
         this._input = this._input.map(word => {
             let r = new RegExp("([" + BASIC_RUSSIAN_VOWELS.join("") + "])(?=.*[" + RUSSIAN_VOWELS.join('') + "])", "gi")
-            return word.replace(r, "i")
+            return word.replace(r, (match) => {
+                return this.matchCase("i", match)
+            })
         })
 
         return this;
@@ -28,7 +47,9 @@ export default class CommunityContainedInput {
      */
     applyETransformation(): CommunityContainedInput {
         this._input = this._input.map(word => {
-            return word.replace(/е/gi, "є").replace(/э/gi, "е")
+            return word.replace(/е/g, "є").replace(/E/g, "Є").replace(/э/gi, (match) => {
+                return this.matchCase("е", match)
+            })
         });
 
         return this;
@@ -39,7 +60,9 @@ export default class CommunityContainedInput {
      */
     applyITransformation(): CommunityContainedInput {
         this._input = this._input.map(word => {
-            return word.replace(/и/gi, "i")
+            return word.replace(/и/gi, (match) => {
+                return this.matchCase("i", match)
+            })
         });
 
         return this;
@@ -51,7 +74,9 @@ export default class CommunityContainedInput {
     applyZTransformation(): CommunityContainedInput {
         this._input = this._input.map(word => {
             let r = new RegExp("^с([^" + RUSSIAN_VOWELS.join("") + "])", "i");
-            return word.replace(r, "з$1")
+            return word.replace(r, (match, m1) => {
+                return (this.matchCase("з", match) + m1)
+            })
         });
 
         return this;
@@ -62,7 +87,11 @@ export default class CommunityContainedInput {
      */
     applyDoubleITransformation(): CommunityContainedInput {
         this._input = this._input.map(word => {
-            return word.replace(/ii/gi, "iї")
+            return word
+                .replace(/ii/g, "iї")
+                .replace(/iI/g, "iЇ")
+                .replace(/Ii/g, "Iї")
+                .replace(/II/g, "IЇ")
         });
 
         return this;
@@ -86,6 +115,8 @@ export default class CommunityContainedInput {
         this._input = this._input.map(word => {
             if (word === "на") {
                 return "в"
+            } else if (word === "НА") {
+                return "В"
             } else {
                 return word;
             }
@@ -111,7 +142,9 @@ export default class CommunityContainedInput {
      */
     applyTisyaRule(): CommunityContainedInput {
         this._input = this._input.map(word => {
-            return word.replace(/(ться|тся)/i, "тися");
+            return word.replace(/(ться|тся)/i, (match) => {
+                return this.matchCase("тися", match)
+            });
         })
 
         return this;
@@ -122,7 +155,9 @@ export default class CommunityContainedInput {
      */
     applyInfinitiveRule(): CommunityContainedInput {
         this._input = this._input.map(word => {
-            return word.replace(/(ть$)/i, "ти")
+            return word.replace(/(ть$)/i, (match) => {
+                return this.matchCase("ти", match)
+            });
         });
 
         return this;
@@ -133,7 +168,9 @@ export default class CommunityContainedInput {
      */
     applyAbsentLetterRule(): CommunityContainedInput {
         this._input = this._input.map(word => {
-            return word.replace(/ы/gi, "и");
+            return word.replace(/ы/gi, (match) => {
+                return this.matchCase("и", match)
+            });
         })
         return this;
     }
@@ -154,7 +191,9 @@ export default class CommunityContainedInput {
     applySingleVowelWordTransformation(): CommunityContainedInput {
         this._input = this._input.map(word => {
             let r = new RegExp("([" + BASIC_RUSSIAN_VOWELS.join("") + "]{1})(?!.*[" + RUSSIAN_VOWELS.join('') + "])(?=.)", "gi")
-            return word.replace(r, "i")
+            return word.replace(r, (match) => {
+                return this.matchCase("i", match)
+            });
         })
 
         return this;
