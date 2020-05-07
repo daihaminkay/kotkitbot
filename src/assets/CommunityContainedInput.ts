@@ -12,16 +12,22 @@ export default class CommunityContainedInput {
     }
 
     private matchCase(text: string, pattern: string): string {
-        var result = '';
+        let result = '';
+        let isLastKnownCaseUpper: boolean;
 
-        for (var i = 0; i < text.length; i++) {
-            var c = text.charAt(i);
-            var p = pattern.charCodeAt(i);
+        for (let i = 0; i < text.length; i++) {
+            let c = text.charAt(i);
+            let p = pattern.charCodeAt(i);
 
             if (p >= 1040 && p < 1040 + 32) {
                 result += c.toUpperCase();
+                isLastKnownCaseUpper = true;
+            } else if (isNaN(p)) {
+                // heuristic in case replacement is longer than original
+                result += isLastKnownCaseUpper ? c.toUpperCase() : c.toLowerCase();
             } else {
                 result += c.toLowerCase();
+                isLastKnownCaseUpper = false;
             }
         }
 
@@ -131,7 +137,7 @@ export default class CommunityContainedInput {
      */
     applyDoubleConsonantTransformation(): CommunityContainedInput {
         this._input = this._input.map(word => {
-            return word.replace(new RegExp("(.)(ь)([" + BASIC_RUSSIAN_VOWELS.join("") + "])", "gi"), "$1$1$3")
+            return word.replace(new RegExp("(.)(ь)([" + RUSSIAN_VOWELS.join("") + "])", "gi"), "$1$1$3")
         });
 
         return this;
@@ -140,7 +146,7 @@ export default class CommunityContainedInput {
     /**
      * -тся, -ться заменяем на "тися"
      */
-    applyTisyaRule(): CommunityContainedInput {
+    applyTisyaTransformation(): CommunityContainedInput {
         this._input = this._input.map(word => {
             return word.replace(/(ться|тся)/i, (match) => {
                 return this.matchCase("тися", match)
@@ -153,7 +159,7 @@ export default class CommunityContainedInput {
     /**
      * -ть заменяем на "ти"
      */
-    applyInfinitiveRule(): CommunityContainedInput {
+    applyInfinitiveTransformation(): CommunityContainedInput {
         this._input = this._input.map(word => {
             return word.replace(/(ть$)/i, (match) => {
                 return this.matchCase("ти", match)
@@ -166,7 +172,7 @@ export default class CommunityContainedInput {
     /**
      * Все "ы" заменяем на "и"
      */
-    applyAbsentLetterRule(): CommunityContainedInput {
+    applyAbsentLetterTransformation(): CommunityContainedInput {
         this._input = this._input.map(word => {
             return word.replace(/ы/gi, (match) => {
                 return this.matchCase("и", match)
@@ -178,7 +184,7 @@ export default class CommunityContainedInput {
     /**
      * Все "знаки" заменяем на апостроф
      */
-    applyApostropheRule(): CommunityContainedInput {
+    applyApostropheTransformation(): CommunityContainedInput {
         this._input = this._input.map(word => {
             return word.replace(/(ь|ъ)/gi, "'");
         })
@@ -186,7 +192,7 @@ export default class CommunityContainedInput {
     }
 
     /**
-     * Предлог "на" под запретом - автозамена на "в"
+     * Если в слове одна гласная, заменяем ее на "i"
      */
     applySingleVowelWordTransformation(): CommunityContainedInput {
         this._input = this._input.map(word => {

@@ -33,10 +33,10 @@ function processMessage(message: string): string {
         .applyDoubleLetterTransformation()
         .applyVNaTransformation()
         .applyDoubleConsonantTransformation()
-        .applyAbsentLetterRule()
-        .applyTisyaRule()
-        .applyInfinitiveRule()
-        .applyApostropheRule()
+        .applyAbsentLetterTransformation()
+        .applyTisyaTransformation()
+        .applyInfinitiveTransformation()
+        .applyApostropheTransformation()
         .applySingleVowelWordTransformation()
         .toString();
 }
