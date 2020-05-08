@@ -13,6 +13,7 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
+    "pg": "^8.0.3",
     "telegraf": "^3.38.0",
     "uuid": "^8.0.0"
   },
@@ -20,6 +21,7 @@
     "@types/mocha": "^7.0.2",
     "@types/chai": "^4.2.11",
     "@types/node": "^13.13.4",
+    "@types/pg": "^7.14.3",
     "chai": "^4.2.0",
     "mocha": "^7.1.2",
     "nodemon": "^2.0.3",
