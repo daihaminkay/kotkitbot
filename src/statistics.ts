@@ -4,8 +4,7 @@ export class DataRetainer {
     private pool: Pool;
     constructor(databaseUrl: string) {
         this.pool = new Pool({
-            connectionString: databaseUrl,
-            ssl: true
+            connectionString: databaseUrl
         });
     }
 
