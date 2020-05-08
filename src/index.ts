@@ -6,6 +6,7 @@ import { InlineQuery } from "telegraf/typings/telegram-types";
 
 const TOKEN = process.env.TELEGRAM_TOKEN;
 const DATABASE_URL = process.env.DATABASE_URL;
+const ADMIN_ID = 211824194;
 
 const bot = new Telegraf(TOKEN, { username: "KotKitBot" });
 const dr = new DataRetainer(DATABASE_URL);
@@ -25,6 +26,19 @@ bot.on("inline_query", async ({ inlineQuery, answerInlineQuery }) => {
         return answerInlineQuery(response)
     }
 })
+
+bot.command("stats", async ({ from, replyWithHTML }) => {
+    if (from.id === ADMIN_ID) {
+        let stats = await dr.getUsageStatistics();
+        let statsResponse: string = "";
+        for (let datum of stats) {
+            statsResponse += `<code>${datum.user_id}</code> (${datum.role}) - <b>${datum.call_count}</b>\n`
+        }
+
+        replyWithHTML(statsResponse)
+    }
+})
+
 bot.launch()
 
 function processMessage(message: string): string {
