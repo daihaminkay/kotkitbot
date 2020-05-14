@@ -61,7 +61,7 @@ function processMessage(message: string): string {
 }
 
 async function putMetrics(query: InlineQuery) {
-    const clientId = query.from.username;
+    const clientId = query.from.username || query.from.first_name;
     const clientRole = query.from.is_bot ? "bot" : "human";
     console.log(`Caller: ${clientId} (${clientRole}), Input: ${query.query}`);
     await dr.addUsageRecord(clientId, clientRole)
