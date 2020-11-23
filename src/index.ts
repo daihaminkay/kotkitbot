@@ -14,7 +14,9 @@ const dr = new DataRetainer(DATABASE_URL);
 bot.on("inline_query", async ({ inlineQuery, answerInlineQuery }) => {
     if (inlineQuery.query) {
         putMetrics(inlineQuery);
-        let messageResponse = [processMessage(inlineQuery.query)];
+        const input = new CommunityContainedInput();
+        const processed = input.processMessage(inlineQuery.query)
+        let messageResponse = [processed];
         let response = messageResponse.map(r => ({
             type: "article",
             id: uuid.v4(),
@@ -40,25 +42,6 @@ bot.command("stats", async ({ from, replyWithHTML }) => {
 })
 
 bot.launch()
-
-function processMessage(message: string): string {
-    const processedMessage = new CommunityContainedInput(message);
-    return processedMessage
-        .applyZTransformation()
-        .applyVowelsTransformation()
-        .applyETransformation()
-        .applyITransformation()
-        .applyDoubleITransformation()
-        .applyDoubleLetterTransformation()
-        .applyVNaTransformation()
-        .applyDoubleConsonantTransformation()
-        .applyAbsentLetterTransformation()
-        .applyTisyaTransformation()
-        .applyInfinitiveTransformation()
-        .applyApostropheTransformation()
-        .applySingleVowelWordTransformation()
-        .toString();
-}
 
 async function putMetrics(query: InlineQuery) {
     const clientId = query.from.username || query.from.first_name;

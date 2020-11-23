@@ -1,9 +1,7 @@
-export default class ContainedInput {
-    private _input: string;
+import { IInput } from "./IInput";
 
-    constructor(input: string) {
-        this._input = input;
-    }
+export default class ContainedInput implements IInput {
+    private _input: string;
 
     applyKitRule(): ContainedInput {
         this._input = this._input.replace(/о/gi, (match: string) => {
@@ -43,5 +41,10 @@ export default class ContainedInput {
 
     toString(): string {
         return this._input;
+    }
+
+    processMessage(message: string) {
+        this._input = message;
+        this.applyAbsentLetterRule().applyInfinitiveRule().applyKitRule().applyTisyaRule().applyVulitsaRule();
     }
 }

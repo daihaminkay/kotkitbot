@@ -2,15 +2,11 @@
  * Inspired by: https://a2ch.ru/2014/02/25/aniny-skiro-na-ukrin-bidit-ubivit-ili-sizhit-v-tirmu-za-63194316.html
  */
 
+import { IInput } from "./IInput";
+
 export const BASIC_RUSSIAN_VOWELS = ["а", "ю", "я", "ё", "о", "у"];
 export const RUSSIAN_VOWELS = ["а", "э", "ю", "я", "ы", "ё", "о", "у", "е", "и"];
-export default class CommunityContainedInput {
-    private _input: string[];
-
-    constructor(input: string) {
-        this._input = input.split(/\s/);
-    }
-
+export default class CommunityContainedInput implements IInput {
     private matchCase(text: string, pattern: string): string {
         let result = '';
         let isLastKnownCaseUpper: boolean;
@@ -37,88 +33,76 @@ export default class CommunityContainedInput {
     /**
      * Переводит все гласные (для которых нет других правил) кроме последней в i
      */
-    applyVowelsTransformation(): CommunityContainedInput {
-        this._input = this._input.map(word => {
+    applyVowelsTransformation(input: string[]): string[] {
+        return input.map(word => {
             let r = new RegExp("([" + BASIC_RUSSIAN_VOWELS.join("") + "])(?=.*[" + RUSSIAN_VOWELS.join('') + "])", "gi")
             return word.replace(r, (match) => {
                 return this.matchCase("i", match)
             })
         })
-
-        return this;
     }
 
     /**
      * Заменяет все "е" на украинскую версию
      */
-    applyETransformation(): CommunityContainedInput {
-        this._input = this._input.map(word => {
+    applyETransformation(input: string[]): string[] {
+        return input.map(word => {
             return word.replace(/е/g, "є").replace(/Е/g, "Є").replace(/э/gi, (match) => {
                 return this.matchCase("е", match)
             })
         });
-
-        return this;
     }
 
     /**
      * Заменяет все "и" на "i"
      */
-    applyITransformation(): CommunityContainedInput {
-        this._input = this._input.map(word => {
+    applyITransformation(input: string[]): string[] {
+        return input.map(word => {
             return word.replace(/и/gi, (match) => {
                 return this.matchCase("i", match)
             })
         });
-
-        return this;
     }
 
     /**
      * Если слово начинается на "с"+согласная, заменяет "с" на "з"
      */
-    applyZTransformation(): CommunityContainedInput {
-        this._input = this._input.map(word => {
+    applyZTransformation(input: string[]): string[] {
+        return input.map(word => {
             let r = new RegExp("^с([^" + RUSSIAN_VOWELS.join("") + "])", "i");
             return word.replace(r, (match, m1) => {
                 return (this.matchCase("з", match) + m1)
             })
         });
-
-        return this;
     }
 
     /**
      * Если в преобразовании появилось "ii", делаем вторую особой
      */
-    applyDoubleITransformation(): CommunityContainedInput {
-        this._input = this._input.map(word => {
+    applyDoubleITransformation(input: string[]): string[] {
+        return input.map(word => {
             return word
                 .replace(/ii/g, "iї")
                 .replace(/iI/g, "iЇ")
                 .replace(/Ii/g, "Iї")
                 .replace(/II/g, "IЇ")
         });
-
-        return this;
     }
 
     /**
      * Любые две одинаковые буквы подряд заменяются на одну
      */
-    applyDoubleLetterTransformation(): CommunityContainedInput {
-        this._input = this._input.map(word => {
+    applyDoubleLetterTransformation(input: string[]): string[] {
+        return input.map(word => {
             return word.replace(/(.)\1/gi, "$1")
         });
-
-        return this;
     }
 
     /**
      * Предлог "на" под запретом - автозамена на "в"
      */
-    applyVNaTransformation(): CommunityContainedInput {
-        this._input = this._input.map(word => {
+    applyVNaTransformation(input: string[]): string[] {
+        return input.map(word => {
             if (word === "на") {
                 return "в"
             } else if (word === "НА") {
@@ -127,85 +111,91 @@ export default class CommunityContainedInput {
                 return word;
             }
         });
-
-        return this;
     }
 
     /**
      * Если слово заканчивается на "ь"+гласная, заменить на двойную согласную перед "ь"
      * (житья => життя)
      */
-    applyDoubleConsonantTransformation(): CommunityContainedInput {
-        this._input = this._input.map(word => {
+    applyDoubleConsonantTransformation(input: string[]): string[] {
+        return input.map(word => {
             return word.replace(new RegExp("(.)(ь)([" + RUSSIAN_VOWELS.join("") + "])", "gi"), "$1$1$3")
         });
-
-        return this;
     }
 
     /**
      * -тся, -ться заменяем на "тися"
      */
-    applyTisyaTransformation(): CommunityContainedInput {
-        this._input = this._input.map(word => {
+    applyTisyaTransformation(input: string[]): string[] {
+        return input.map(word => {
             return word.replace(/(ться|тся)/i, (match) => {
                 return this.matchCase("тися", match)
             });
         })
-
-        return this;
     }
 
     /**
      * -ть заменяем на "ти"
      */
-    applyInfinitiveTransformation(): CommunityContainedInput {
-        this._input = this._input.map(word => {
+    applyInfinitiveTransformation(input: string[]): string[] {
+        return input.map(word => {
             return word.replace(/(ть$)/i, (match) => {
                 return this.matchCase("ти", match)
             });
         });
-
-        return this;
     }
 
     /**
      * Все "ы" заменяем на "и"
      */
-    applyAbsentLetterTransformation(): CommunityContainedInput {
-        this._input = this._input.map(word => {
+    applyAbsentLetterTransformation(input: string[]): string[] {
+        return input.map(word => {
             return word.replace(/ы/gi, (match) => {
                 return this.matchCase("и", match)
             });
         })
-        return this;
     }
 
     /**
      * Все "знаки" заменяем на апостроф
      */
-    applyApostropheTransformation(): CommunityContainedInput {
-        this._input = this._input.map(word => {
+    applyApostropheTransformation(input: string[]): string[] {
+        return input.map(word => {
             return word.replace(/(ь|ъ)/gi, "'");
         })
-        return this;
     }
 
     /**
      * Если в слове одна гласная, заменяем ее на "i"
      */
-    applySingleVowelWordTransformation(): CommunityContainedInput {
-        this._input = this._input.map(word => {
+    applySingleVowelWordTransformation(input: string[]): string[] {
+        return input.map(word => {
             let r = new RegExp("([" + BASIC_RUSSIAN_VOWELS.join("") + "]{1})(?!.*[" + RUSSIAN_VOWELS.join('') + "])(?=.)", "gi")
             return word.replace(r, (match) => {
                 return this.matchCase("i", match)
             });
         })
-
-        return this;
     }
 
-    toString(): string {
-        return this._input.join(" ");
+    toString(input: string[]): string {
+        return input.join(" ");
+    }
+
+    processMessage(message: string): string {
+        let input = message.split(/\s/);
+        input = this.applyZTransformation(input);
+        input = this.applyVowelsTransformation(input);
+        input = this.applyETransformation(input);
+        input = this.applyITransformation(input);
+        input = this.applyDoubleITransformation(input);
+        input = this.applyDoubleLetterTransformation(input);
+        input = this.applyVNaTransformation(input);
+        input = this.applyDoubleConsonantTransformation(input);
+        input = this.applyAbsentLetterTransformation(input);
+        input = this.applyTisyaTransformation(input);
+        input = this.applyInfinitiveTransformation(input);
+        input = this.applyApostropheTransformation(input);
+        input = this.applySingleVowelWordTransformation(input);
+        return this.toString(input);
     }
 }
