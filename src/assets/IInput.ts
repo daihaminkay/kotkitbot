@@ -1,3 +1,4 @@
 export interface IInput {
-    processMessage(message: string): void;
+    processMessage(message: string): string;
+    getDescription(): string;
 }

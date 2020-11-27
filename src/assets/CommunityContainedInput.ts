@@ -181,6 +181,10 @@ export default class CommunityContainedInput implements IInput {
         return input.join(" ");
     }
 
+    getDescription(): string {
+        return "This is a sample language pack, transforms Russian language to somewhat Ukrainian as a general joke."
+    }
+
     processMessage(message: string): string {
         let input = message.split(/\s/);
         input = this.applyZTransformation(input);
