@@ -46,7 +46,7 @@ export class DataRetainer {
                 `ON CONFLICT (user_id) DO UPDATE SET call_count = unique_users.call_count + 1`
             await client.query(insertQuery);
         } catch (err) {
-            console.error(`Failed to update the database: ${err}`);
+            console.error(`Failed to add/update user record: ${err}`);
         } finally {
             client.release();
         }
@@ -59,7 +59,7 @@ export class DataRetainer {
                 `ON CONFLICT (user_id) DO UPDATE SET language = '${language}'`
             await client.query(insertQuery);
         } catch (err) {
-            console.error(`Failed to update the database: ${err}`);
+            console.error(`Failed to add new language mapping: ${err}`);
         } finally {
             client.release();
         }
@@ -70,9 +70,9 @@ export class DataRetainer {
         try {
             const insertQuery = `SELECT language FROM user_language_choice WHERE user_id = '${clientId}' LIMIT 1`
             const result = await client.query(insertQuery);
-            return result.rows[0].language
+            return result.rows[0]?.language
         } catch (err) {
-            console.error(`Failed to update the database: ${err}`);
+            console.error(`Failed to get the language mapping: ${err}`);
         } finally {
             client.release();
         }
