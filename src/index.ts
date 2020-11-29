@@ -13,7 +13,7 @@ const SEED = uuid.v4();
 const bot = new Telegraf(TOKEN, { username: "KotKitBot" });
 const dr = new DataRetainer(DATABASE_URL);
 
-async function putMetrics({ from, query }: { from: User, query?: string }) {
+async function registerActivity({ from, query }: { from: User, query?: string }) {
     const userId = from.id.toString();
     const userHandle = from.username || from.first_name;
     const userRole = from.is_bot ? "bot" : "human";
@@ -23,7 +23,7 @@ async function putMetrics({ from, query }: { from: User, query?: string }) {
 
 bot.on("inline_query", async ({ from, inlineQuery, answerInlineQuery }) => {
     if (inlineQuery.query) {
-        putMetrics(inlineQuery);
+        registerActivity(inlineQuery);
         const language = await dr.getUserLanguageMapping(from.id.toString());
         const input = languages[language || DEFAULT_LANGUAGE];
         const processed = input.processMessage(inlineQuery.query);
@@ -52,7 +52,7 @@ bot.command("stats", async ({ from, replyWithHTML }) => {
 });
 
 bot.command("listLanguages", async ({ from, replyWithHTML }) => {
-    putMetrics({ from });
+    registerActivity({ from });
     let languageList = "";
     for (const language in languages) {
         languageList += `[<code>${language}</code>] - ${languages[language].getDescription()}\n`;
@@ -62,19 +62,19 @@ bot.command("listLanguages", async ({ from, replyWithHTML }) => {
 });
 
 bot.command("chooseLanguage", async ({ from, reply }) => {
-    putMetrics({ from });
+    registerActivity({ from });
     const languageMarkup = Markup.inlineKeyboard(Object.keys(languages).map(language => Markup.callbackButton(language, language + SEED)));
     reply("Choose your language pack:", { reply_markup: languageMarkup });
 });
 
 bot.help(async ({ from, reply }) => {
-    putMetrics({ from });
+    registerActivity({ from });
     const menuMarkup = Markup.keyboard([Markup.button("/listLanguages"), Markup.button("/chooseLanguage"), Markup.button("Usage")]);
     reply("Choose what you want to do:", { reply_markup: menuMarkup });
 });
 
 bot.hears("Usage", ({ from, reply }) => {
-    putMetrics({ from });
+    registerActivity({ from });
     reply("Simply go to the chat you want to use me in and type \"@KotKitBot\" and a space. " +
         "Then, type in your message, and I will show you my \"translation\" according to " +
         "the language you picked! Select the translation, and it will be sent to whoever " +
@@ -83,7 +83,7 @@ bot.hears("Usage", ({ from, reply }) => {
 
 for (const language in languages) {
     bot.action(language + SEED, async ({ from, replyWithHTML }) => {
-        putMetrics({ from });
+        registerActivity({ from });
         await dr.setUserLanguageMapping(from.id.toString(), language);
         replyWithHTML(`Here you go, <b>${language}</b> was successfully selected! You can start using the bot now.`);
     });

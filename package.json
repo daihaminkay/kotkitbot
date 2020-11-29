@@ -11,10 +11,11 @@
     "clean": "rm -rf ./node_modules ./dist",
     "test": "mocha -r ts-node/register **/*.spec.ts"
   },
-  "author": "",
+  "author": "daihaminkay",
   "license": "ISC",
   "dependencies": {
     "pg": "^8.0.3",
+    "slonik": "^23.0.3",
     "telegraf": "^3.38.0",
     "uuid": "^8.0.0"
   },
@@ -22,7 +23,6 @@
     "@types/chai": "^4.2.11",
     "@types/mocha": "^7.0.2",
     "@types/node": "^13.13.4",
-    "@types/pg": "^7.14.3",
     "@typescript-eslint/eslint-plugin": "^4.8.2",
     "@typescript-eslint/parser": "^4.8.2",
     "chai": "^4.2.0",
