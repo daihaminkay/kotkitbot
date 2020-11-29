@@ -1,5 +1,8 @@
 import { IInput } from "./IInput";
 
+/**
+ * This is an example class
+ */
 export default class EmoInput implements IInput {
     processMessage(message: string): string {
         let emoMessage = "";
@@ -8,7 +11,7 @@ export default class EmoInput implements IInput {
             if (flag) {
                 emoMessage += letter.toUpperCase();
             } else {
-                emoMessage += letter
+                emoMessage += letter;
             }
             flag = !flag;
         }

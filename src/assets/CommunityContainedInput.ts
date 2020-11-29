@@ -8,12 +8,12 @@ export const BASIC_RUSSIAN_VOWELS = ["а", "ю", "я", "ё", "о", "у"];
 export const RUSSIAN_VOWELS = ["а", "э", "ю", "я", "ы", "ё", "о", "у", "е", "и"];
 export default class CommunityContainedInput implements IInput {
     private matchCase(text: string, pattern: string): string {
-        let result = '';
+        let result = "";
         let isLastKnownCaseUpper: boolean;
 
         for (let i = 0; i < text.length; i++) {
-            let c = text.charAt(i);
-            let p = pattern.charCodeAt(i);
+            const c = text.charAt(i);
+            const p = pattern.charCodeAt(i);
 
             if (p >= 1040 && p < 1040 + 32) {
                 result += c.toUpperCase();
@@ -35,11 +35,11 @@ export default class CommunityContainedInput implements IInput {
      */
     applyVowelsTransformation(input: string[]): string[] {
         return input.map(word => {
-            let r = new RegExp("([" + BASIC_RUSSIAN_VOWELS.join("") + "])(?=.*[" + RUSSIAN_VOWELS.join('') + "])", "gi")
+            const r = new RegExp("([" + BASIC_RUSSIAN_VOWELS.join("") + "])(?=.*[" + RUSSIAN_VOWELS.join("") + "])", "gi");
             return word.replace(r, (match) => {
-                return this.matchCase("i", match)
-            })
-        })
+                return this.matchCase("i", match);
+            });
+        });
     }
 
     /**
@@ -48,8 +48,8 @@ export default class CommunityContainedInput implements IInput {
     applyETransformation(input: string[]): string[] {
         return input.map(word => {
             return word.replace(/е/g, "є").replace(/Е/g, "Є").replace(/э/gi, (match) => {
-                return this.matchCase("е", match)
-            })
+                return this.matchCase("е", match);
+            });
         });
     }
 
@@ -59,8 +59,8 @@ export default class CommunityContainedInput implements IInput {
     applyITransformation(input: string[]): string[] {
         return input.map(word => {
             return word.replace(/и/gi, (match) => {
-                return this.matchCase("i", match)
-            })
+                return this.matchCase("i", match);
+            });
         });
     }
 
@@ -69,10 +69,10 @@ export default class CommunityContainedInput implements IInput {
      */
     applyZTransformation(input: string[]): string[] {
         return input.map(word => {
-            let r = new RegExp("^с([^" + RUSSIAN_VOWELS.join("") + "])", "i");
+            const r = new RegExp("^с([^" + RUSSIAN_VOWELS.join("") + "])", "i");
             return word.replace(r, (match, m1) => {
-                return (this.matchCase("з", match) + m1)
-            })
+                return (this.matchCase("з", match) + m1);
+            });
         });
     }
 
@@ -85,7 +85,7 @@ export default class CommunityContainedInput implements IInput {
                 .replace(/ii/g, "iї")
                 .replace(/iI/g, "iЇ")
                 .replace(/Ii/g, "Iї")
-                .replace(/II/g, "IЇ")
+                .replace(/II/g, "IЇ");
         });
     }
 
@@ -94,7 +94,7 @@ export default class CommunityContainedInput implements IInput {
      */
     applyDoubleLetterTransformation(input: string[]): string[] {
         return input.map(word => {
-            return word.replace(/(.)\1/gi, "$1")
+            return word.replace(/(.)\1/gi, "$1");
         });
     }
 
@@ -104,9 +104,9 @@ export default class CommunityContainedInput implements IInput {
     applyVNaTransformation(input: string[]): string[] {
         return input.map(word => {
             if (word === "на") {
-                return "в"
+                return "в";
             } else if (word === "НА") {
-                return "В"
+                return "В";
             } else {
                 return word;
             }
@@ -119,7 +119,7 @@ export default class CommunityContainedInput implements IInput {
      */
     applyDoubleConsonantTransformation(input: string[]): string[] {
         return input.map(word => {
-            return word.replace(new RegExp("(.)(ь)([" + RUSSIAN_VOWELS.join("") + "])", "gi"), "$1$1$3")
+            return word.replace(new RegExp("(.)(ь)([" + RUSSIAN_VOWELS.join("") + "])", "gi"), "$1$1$3");
         });
     }
 
@@ -129,9 +129,9 @@ export default class CommunityContainedInput implements IInput {
     applyTisyaTransformation(input: string[]): string[] {
         return input.map(word => {
             return word.replace(/(ться|тся)/i, (match) => {
-                return this.matchCase("тися", match)
+                return this.matchCase("тися", match);
             });
-        })
+        });
     }
 
     /**
@@ -140,7 +140,7 @@ export default class CommunityContainedInput implements IInput {
     applyInfinitiveTransformation(input: string[]): string[] {
         return input.map(word => {
             return word.replace(/(ть$)/i, (match) => {
-                return this.matchCase("ти", match)
+                return this.matchCase("ти", match);
             });
         });
     }
@@ -151,9 +151,9 @@ export default class CommunityContainedInput implements IInput {
     applyAbsentLetterTransformation(input: string[]): string[] {
         return input.map(word => {
             return word.replace(/ы/gi, (match) => {
-                return this.matchCase("и", match)
+                return this.matchCase("и", match);
             });
-        })
+        });
     }
 
     /**
@@ -162,7 +162,7 @@ export default class CommunityContainedInput implements IInput {
     applyApostropheTransformation(input: string[]): string[] {
         return input.map(word => {
             return word.replace(/(ь|ъ)/gi, "'");
-        })
+        });
     }
 
     /**
@@ -170,11 +170,11 @@ export default class CommunityContainedInput implements IInput {
      */
     applySingleVowelWordTransformation(input: string[]): string[] {
         return input.map(word => {
-            let r = new RegExp("([" + BASIC_RUSSIAN_VOWELS.join("") + "]{1})(?!.*[" + RUSSIAN_VOWELS.join('') + "])(?=.)", "gi")
+            const r = new RegExp("([" + BASIC_RUSSIAN_VOWELS.join("") + "]{1})(?!.*[" + RUSSIAN_VOWELS.join("") + "])(?=.)", "gi");
             return word.replace(r, (match) => {
-                return this.matchCase("i", match)
+                return this.matchCase("i", match);
             });
-        })
+        });
     }
 
     toString(input: string[]): string {
@@ -182,7 +182,7 @@ export default class CommunityContainedInput implements IInput {
     }
 
     getDescription(): string {
-        return "This is a sample language pack, transforms Russian language to somewhat Ukrainian as a general joke."
+        return "This is a sample language pack, transforms Russian language to somewhat Ukrainian as a general joke.";
     }
 
     processMessage(message: string): string {
