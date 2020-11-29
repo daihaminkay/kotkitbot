@@ -25,14 +25,16 @@ bot.on("inline_query", async ({ from, inlineQuery, answerInlineQuery }) => {
     if (inlineQuery.query) {
         registerActivity(inlineQuery);
         const language = await dr.getUserLanguageMapping(from.id.toString());
-        const input = languages[language || DEFAULT_LANGUAGE];
-        const processed = input.processMessage(inlineQuery.query);
+        const processor = languages[language || DEFAULT_LANGUAGE];
+        const message = processor.processMessage(inlineQuery.query);
         const response: InlineQueryResultArticle[] = [{
             type: "article",
             id: uuid.v4(),
-            title: processed,
+            title: message,
+            thumb_url: processor.getThumbnailUrl?.(),
+            description: language,
             input_message_content: {
-                message_text: processed
+                message_text: message
             }
         }];
         return answerInlineQuery(response);

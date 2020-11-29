@@ -17,6 +17,11 @@ export default class EmoInput implements IInput {
         }
         return emoMessage;
     }
+
+    getThumbnailUrl(): string {
+        return "https://en.meming.world/images/en/thumb/e/e0/Mocking_SpongeBob.jpg/300px-Mocking_SpongeBob.jpg";
+    }
+
     getDescription(): string {
         return "MaKeS yOuR tExT lOoK lIkE tHiS";
     }
