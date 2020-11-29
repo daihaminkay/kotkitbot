@@ -13,7 +13,8 @@ export default class EmoInput implements IInput {
             } else {
                 emoMessage += letter;
             }
-            flag = !flag;
+            if (letter.trim().length > 0)
+                flag = !flag;
         }
         return emoMessage;
     }
