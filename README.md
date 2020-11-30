@@ -2,11 +2,11 @@
 Telegram bot that enables you to do inline translations of your messages for the sake of FUN.
 
 ## Screenshots
-Setting language:
-![settings](.README/IMG_9266.gif)
 
-Using in chat:
-![usage](.README/FullSizeRender.gif)
+| Setting language:                 | Using in chat:                 |
+| --------------------------------- | ------------------------------ |
+| ![settings](.README/IMG_9266.gif) | ![usage](.README/IMG_9267.gif) |
+
 
 ## Little backstory
 
