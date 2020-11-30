@@ -18,38 +18,50 @@ async function registerActivity({ from, query }: { from: User, query?: string })
     const userHandle = from.username || from.first_name;
     const userRole = from.is_bot ? "bot" : "human";
     console.log(`Caller: ${userHandle} (${userRole}), Input: ${query ?? "nil"}`);
-    await dr.addUsageRecord(userId, userHandle, userRole);
+    try {
+        await dr.addUsageRecord(userId, userHandle, userRole);
+    } catch (e) {
+        console.log(`Failed to add usage record: ${e}`);
+    }
 }
 
 bot.on("inline_query", async ({ from, inlineQuery, answerInlineQuery }) => {
     if (inlineQuery.query) {
         registerActivity(inlineQuery);
-        const language = await dr.getUserLanguageMapping(from.id.toString());
-        const processor = languages[language || DEFAULT_LANGUAGE];
-        const message = processor.processMessage(inlineQuery.query);
-        const response: InlineQueryResultArticle[] = [{
-            type: "article",
-            id: uuid.v4(),
-            title: message,
-            thumb_url: processor.getThumbnailUrl?.(),
-            description: language,
-            input_message_content: {
-                message_text: message
-            }
-        }];
-        return answerInlineQuery(response);
+        try {
+            const language = await dr.getUserLanguageMapping(from.id.toString());
+            const processor = languages[language || DEFAULT_LANGUAGE];
+            const message = processor.processMessage(inlineQuery.query);
+            const response: InlineQueryResultArticle[] = [{
+                type: "article",
+                id: uuid.v4(),
+                title: message,
+                thumb_url: processor.getThumbnailUrl?.(),
+                description: language,
+                input_message_content: {
+                    message_text: message
+                }
+            }];
+            return answerInlineQuery(response);
+        } catch (e) {
+            console.log(`Failed to get language mapping: ${e}`);
+        }
     }
 });
 
 bot.command("stats", async ({ from, replyWithHTML }) => {
     if (from.id.toString() === ADMIN_ID) {
-        const stats = await dr.getUsageStatistics();
-        let statsResponse = "";
-        for (const datum of stats) {
-            statsResponse += `<code>${datum.user_handle}</code> (${datum.role}) - <b>${datum.call_count}</b>\n`;
-        }
+        try {
+            const stats = await dr.getUsageStatistics();
+            let statsResponse = "";
+            for (const datum of stats) {
+                statsResponse += `<code>${datum.user_handle}</code> (${datum.role}) - <b>${datum.call_count}</b>\n`;
+            }
 
-        replyWithHTML(statsResponse);
+            replyWithHTML(statsResponse);
+        } catch (e) {
+            console.log(`Failed to get statistics: ${e}`);
+        }
     }
 });
 
@@ -86,8 +98,13 @@ bot.hears("Usage", ({ from, reply }) => {
 for (const language in languages) {
     bot.action(language + SEED, async ({ from, replyWithHTML }) => {
         registerActivity({ from });
-        await dr.setUserLanguageMapping(from.id.toString(), language);
-        replyWithHTML(`Here you go, <b>${language}</b> was successfully selected! You can start using the bot now.`);
+        try {
+            await dr.setUserLanguageMapping(from.id.toString(), language);
+            replyWithHTML(`Here you go, <b>${language}</b> was successfully selected! You can start using the bot now.`);
+        } catch (e) {
+            console.log(`Failed to set language mapping: ${e}`);
+            replyWithHTML("Sorry, something went wrong. Try again after some time.");
+        }
     });
 }
 
