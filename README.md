@@ -1,6 +1,8 @@
 # Kot-Kit-Bot
 Telegram bot that enables you to do inline translations of your messages for the sake of FUN.
 
+![Node.js CI](https://github.com/daihaminkay/kotkitbot/workflows/Node.js%20CI/badge.svg)
+
 ## Screenshots
 
 | Setting language:                 | Using in chat:                 |
