@@ -42,7 +42,7 @@ bot.on("inline_query", async ({ from, inlineQuery, answerInlineQuery }) => {
                     message_text: message
                 }
             }];
-            return answerInlineQuery(response);
+            return answerInlineQuery(response, { cache_time: 0 });
         } catch (e) {
             console.log(`Failed to get language mapping: ${e}`);
         }
