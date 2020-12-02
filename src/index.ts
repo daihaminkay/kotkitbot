@@ -2,7 +2,9 @@ import { Telegraf, Markup } from "telegraf";
 import { DataRetainer } from "./storage/DataRetainer";
 import * as uuid from "uuid";
 import { languages } from "./assets";
-import { InlineQueryResultArticle, User } from "telegraf/typings/telegram-types";
+import { InlineKeyboardMarkup, InlineQueryResultArticle, User } from "telegraf/typings/telegram-types";
+import { IInput } from "./assets/IInput";
+import { CallbackButton } from "telegraf/typings/markup";
 
 const TOKEN = process.env.TELEGRAM_TOKEN;
 const DATABASE_URL = process.env.DATABASE_URL;
@@ -32,6 +34,16 @@ async function registerActivity({ from, query }: { from?: User, query?: string }
     } catch (e) {
         console.log(`Failed to add usage record: ${e}`);
     }
+}
+
+function createKeyboard(languages: Record<string, IInput>): InlineKeyboardMarkup {
+    // using .reduce to put buttons in rows of 3, so that the content name isn't swallowed
+    const buttonRows = Object.keys(languages).reduce<CallbackButton[][]>((memo, value, index) => {
+        if (index >= 3 && index !== 0) memo.push([]);
+        memo[memo.length - 1].push(Markup.callbackButton(value, value + SEED));
+        return memo;
+    }, [[]]);
+    return Markup.inlineKeyboard(buttonRows);
 }
 
 bot.on("inline_query", async ({ from, inlineQuery, answerInlineQuery }) => {
@@ -74,7 +86,7 @@ bot.command("stats", async ({ from, replyWithHTML }) => {
     }
 });
 
-bot.command("listLanguages", async ({ from, replyWithHTML }) => {
+bot.hears("List options", async ({ from, replyWithHTML }) => {
     registerActivity({ from });
     let languageList = "";
     for (const language in languages) {
@@ -84,15 +96,19 @@ bot.command("listLanguages", async ({ from, replyWithHTML }) => {
     replyWithHTML(languageList);
 });
 
-bot.command("chooseLanguage", async ({ from, reply }) => {
+bot.hears("Pick language", async ({ from, reply }) => {
     registerActivity({ from });
-    const languageMarkup = Markup.inlineKeyboard(Object.keys(languages).map(language => Markup.callbackButton(language, language + SEED)));
+    const languageMarkup = createKeyboard(languages);
     reply("Choose your language pack:", { reply_markup: languageMarkup });
 });
 
 bot.help(async ({ from, reply }) => {
     registerActivity({ from });
-    const menuMarkup = Markup.keyboard([Markup.button("/listLanguages"), Markup.button("/chooseLanguage"), Markup.button("Usage")]);
+    const menuMarkup = Markup.keyboard([
+        Markup.button("List options"),
+        Markup.button("Pick language"),
+        Markup.button("Usage")
+    ]);
     reply("Choose what you want to do:", { reply_markup: menuMarkup });
 });
 
