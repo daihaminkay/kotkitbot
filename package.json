@@ -7,7 +7,7 @@
     "start": "node dist/index.js",
     "lint:fix": "eslint --fix --ext .ts .",
     "lint": "eslint --ext .ts .",
-    "build": " npm run lint:fix && npm run test && tsc -t es5 **/*.ts --outDir dist",
+    "build": " npm run lint:fix && npm run test && tsc -p .",
     "server": "nodemon",
     "clean": "rm -rf ./node_modules ./dist",
     "test": "mocha -r ts-node/register **/*.spec.ts"

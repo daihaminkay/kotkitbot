@@ -26,7 +26,7 @@ async function registerActivity({ from, query }: { from: User, query?: string })
 }
 
 bot.on("inline_query", async ({ from, inlineQuery, answerInlineQuery }) => {
-    if (inlineQuery.query) {
+    if (inlineQuery?.query) {
         registerActivity(inlineQuery);
         try {
             const language = await dr.getUserLanguageMapping(from.id.toString());
