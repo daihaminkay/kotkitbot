@@ -9,7 +9,7 @@ export const RUSSIAN_VOWELS = ["а", "э", "ю", "я", "ы", "ё", "о", "у", "
 export default class CommunityContainedInput implements IInput {
     private matchCase(text: string, pattern: string): string {
         let result = "";
-        let isLastKnownCaseUpper: boolean;
+        let isLastKnownCaseUpper = false;
 
         for (let i = 0; i < text.length; i++) {
             const c = text.charAt(i);

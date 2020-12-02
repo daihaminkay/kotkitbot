@@ -5,7 +5,7 @@ import { IInput } from "./IInput";
  */
 export default class RussianEmoInput implements IInput {
 
-    private weirdnessMap = {
+    private weirdnessMap: Record<string, string> = {
         "в": "фф",
         "е": "и",
         "ш": "фф",
