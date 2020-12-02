@@ -10,10 +10,19 @@ const ADMIN_ID = process.env.ADMIN_ID;
 const DEFAULT_LANGUAGE = "fakeranian";
 const SEED = uuid.v4();
 
+if (!TOKEN || !DATABASE_URL) {
+    console.error("Telegram token or database URL has not been provided");
+    process.exit(-1);
+}
+
 const bot = new Telegraf(TOKEN, { username: "KotKitBot" });
 const dr = new DataRetainer(DATABASE_URL);
 
-async function registerActivity({ from, query }: { from: User, query?: string }) {
+async function registerActivity({ from, query }: { from?: User, query?: string }) {
+    if (!from) {
+        console.warn("Usage was anonymous, nothing to record");
+        return;
+    }
     const userId = from.id.toString();
     const userHandle = from.username || from.first_name;
     const userRole = from.is_bot ? "bot" : "human";
@@ -29,8 +38,8 @@ bot.on("inline_query", async ({ from, inlineQuery, answerInlineQuery }) => {
     if (inlineQuery?.query) {
         registerActivity(inlineQuery);
         try {
-            const language = await dr.getUserLanguageMapping(from.id.toString());
-            const processor = languages[language || DEFAULT_LANGUAGE];
+            const language = from ? await dr.getUserLanguageMapping(from.id.toString()) : DEFAULT_LANGUAGE;
+            const processor = languages[language];
             const message = processor.processMessage(inlineQuery.query);
             const response: InlineQueryResultArticle[] = [{
                 type: "article",
@@ -50,7 +59,7 @@ bot.on("inline_query", async ({ from, inlineQuery, answerInlineQuery }) => {
 });
 
 bot.command("stats", async ({ from, replyWithHTML }) => {
-    if (from.id.toString() === ADMIN_ID) {
+    if (from?.id.toString() === ADMIN_ID) {
         try {
             const stats = await dr.getUsageStatistics();
             let statsResponse = "";
@@ -97,6 +106,12 @@ bot.hears("Usage", ({ from, reply }) => {
 
 for (const language in languages) {
     bot.action(language + SEED, async ({ from, replyWithHTML }) => {
+        if (!from) {
+            console.warn("Anonymous attempt to set a language");
+            replyWithHTML("You are not authenticated, cannot set a language");
+            return;
+        }
+
         registerActivity({ from });
         try {
             await dr.setUserLanguageMapping(from.id.toString(), language);

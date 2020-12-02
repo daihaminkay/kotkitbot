@@ -2,7 +2,7 @@ import { assert } from "chai";
 import LeetInput from "./LeetInput";
 
 describe("LeetInput", () => {
-    let leetInput;
+    let leetInput: LeetInput;
 
     beforeEach(() => {
         leetInput = new LeetInput();
