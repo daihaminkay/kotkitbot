@@ -6,7 +6,7 @@ import { IInput } from "./IInput";
 
 export const BASIC_RUSSIAN_VOWELS = ["а", "ю", "я", "ё", "о", "у"];
 export const RUSSIAN_VOWELS = ["а", "э", "ю", "я", "ы", "ё", "о", "у", "е", "и"];
-export default class CommunityContainedInput implements IInput {
+export default class FakeranianInput implements IInput {
     private matchCase(text: string, pattern: string): string {
         let result = "";
         let isLastKnownCaseUpper = false;
