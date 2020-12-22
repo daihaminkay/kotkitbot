@@ -117,7 +117,7 @@ bot.hears("Usage", ({ from, reply }) => {
     reply("Simply go to the chat you want to use me in and type \"@KotKitBot\" and a space. " +
         "Then, type in your message, and I will show you my \"translation\" according to " +
         "the language you picked! Select the translation, and it will be sent to whoever " +
-        "you are chatting with.");
+        "you are chatting with. P.S. you can contribute here: https://github.com/daihaminkay/kotkitbot");
 });
 
 for (const language in languages) {
