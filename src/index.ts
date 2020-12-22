@@ -39,7 +39,7 @@ async function registerActivity({ from, query }: { from?: User, query?: string }
 function createKeyboard(languages: Record<string, IInput>): InlineKeyboardMarkup {
     // using .reduce to put buttons in rows of 3, so that the content name isn't swallowed
     const buttonRows = Object.keys(languages).reduce<CallbackButton[][]>((memo, value, index) => {
-        if (index >= 3 && index !== 0) memo.push([]);
+        if (index % 3 === 0 && index !== 0) memo.push([]);
         memo[memo.length - 1].push(Markup.callbackButton(value, value + SEED));
         return memo;
     }, [[]]);
