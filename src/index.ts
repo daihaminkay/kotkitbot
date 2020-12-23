@@ -112,6 +112,16 @@ bot.help(async ({ from, reply }) => {
     reply("Choose what you want to do:", { reply_markup: menuMarkup });
 });
 
+bot.start(async ({ from, reply }) => {
+    registerActivity({ from });
+    const menuMarkup = Markup.keyboard([
+        Markup.button("List options"),
+        Markup.button("Pick language"),
+        Markup.button("Usage")
+    ]);
+    reply("Choose what you want to do:", { reply_markup: menuMarkup });
+});
+
 bot.hears("Usage", ({ from, reply }) => {
     registerActivity({ from });
     reply("Simply go to the chat you want to use me in and type \"@KotKitBot\" and a space. " +
