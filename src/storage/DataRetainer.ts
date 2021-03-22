@@ -4,7 +4,7 @@ import { UniqueUser, UserLanguageChoice } from "./DataModels";
 export class DataRetainer {
     private pool: DatabasePoolType;
     constructor(databaseUrl: string, pool?: DatabasePoolType) {
-        this.pool = pool ?? createPool(databaseUrl);
+        this.pool = pool ?? createPool(databaseUrl + "?ssl=1");
     }
 
     async initialize(): Promise<void> {
