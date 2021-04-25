@@ -30,6 +30,10 @@ export default class FakeranianInput implements IInput {
         return result;
     }
 
+    public getThumbnailUrl(): string {
+        return "https://ped-kopilka.ru/images/573.jpg";
+    }
+
     /**
      * Переводит все гласные (для которых нет других правил) кроме последней в i
      */
