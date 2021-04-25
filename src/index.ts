@@ -46,6 +46,23 @@ function createKeyboard(languages: Record<string, IInput>): InlineKeyboardMarkup
     return Markup.inlineKeyboard(buttonRows);
 }
 
+function generateTranslations(query: string, defaultLanguage: string): InlineQueryResultArticle[] {
+    return Object.keys(languages).filter(language => language !== defaultLanguage).map(language => {
+        const processor = languages[language];
+        const message = processor.processMessage(query);
+        return {
+            type: "article",
+            id: uuid.v4(),
+            title: message,
+            thumb_url: processor.getThumbnailUrl?.(),
+            description: language,
+            input_message_content: {
+                message_text: message
+            }
+        };
+    });
+}
+
 bot.on("inline_query", async ({ from, inlineQuery, answerInlineQuery }) => {
     if (inlineQuery?.query) {
         registerActivity(inlineQuery);
@@ -58,11 +75,12 @@ bot.on("inline_query", async ({ from, inlineQuery, answerInlineQuery }) => {
                 id: uuid.v4(),
                 title: message,
                 thumb_url: processor.getThumbnailUrl?.(),
-                description: language,
+                description: `${language} - your default`,
                 input_message_content: {
                     message_text: message
                 }
-            }];
+            },
+            ...generateTranslations(inlineQuery.query, language)];
             return answerInlineQuery(response, { cache_time: 0 });
         } catch (e) {
             console.log(`Failed to get language mapping: ${e}`);
@@ -99,14 +117,14 @@ bot.hears("List options", async ({ from, replyWithHTML }) => {
 bot.hears("Pick language", async ({ from, reply }) => {
     registerActivity({ from });
     const languageMarkup = createKeyboard(languages);
-    reply("Choose your language pack:", { reply_markup: languageMarkup });
+    reply("Choose your default language pack:", { reply_markup: languageMarkup });
 });
 
 bot.help(async ({ from, reply }) => {
     registerActivity({ from });
     const menuMarkup = Markup.keyboard([
         Markup.button("List options"),
-        Markup.button("Pick language"),
+        Markup.button("Pick your default language"),
         Markup.button("Usage")
     ]);
     reply("Choose what you want to do:", { reply_markup: menuMarkup });
@@ -116,7 +134,7 @@ bot.start(async ({ from, reply }) => {
     registerActivity({ from });
     const menuMarkup = Markup.keyboard([
         Markup.button("List options"),
-        Markup.button("Pick language"),
+        Markup.button("Pick your default language"),
         Markup.button("Usage")
     ]);
     reply("Choose what you want to do:", { reply_markup: menuMarkup });
